@@ -1,4 +1,4 @@
-const usersModel = require('../users/users-model')
+const Users = require('../users/users-model')
 
 function logger(req, res, next) {
   // DO YOUR MAGIC
@@ -8,7 +8,7 @@ function logger(req, res, next) {
 
 function validateUserId(req, res, next) {
   const {id} = req.params
-  usersModel.getById(id)
+  Users.getById(id)
   .then(result => {
     if(result) {
       req.user = result;
@@ -22,6 +22,13 @@ function validateUserId(req, res, next) {
 }
 
 function validateUser(req, res, next) {
+  const name = req.body.name
+  if(!name) {
+    res.status(400).json({message: "missing required name field"})
+    return
+  }else{
+    next()
+  }
   // DO YOUR MAGIC
 }
 

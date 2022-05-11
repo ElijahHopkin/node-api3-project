@@ -26,18 +26,33 @@ router.get('/:id', validateUserId,  (req, res) => {
   // this needs a middleware to verify user id
 });
 
-router.post('/', (req, res) => {
+router.post('/', validateUser, (req, res) => {
+  Users.insert(req.body)
+  .then(results => {
+    res.status(201).json(results)
+  })
   // RETURN THE NEWLY CREATED USER OBJECT
   // this needs a middleware to check that the request body is valid
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateUserId, validateUser,  (req, res) => {
+
+  Users.update(req.params.id, req.body)
+  .then(results => {
+    res.json(results)
+  })
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateUserId, (req, res) => {
+  Users.remove(req.params.id)
+  .then(results => {
+    if(results) {
+      res.json(req.user)
+    }
+  })
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
 });
