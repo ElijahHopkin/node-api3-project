@@ -1,8 +1,23 @@
+const usersModel = require('../users/users-model')
+
 function logger(req, res, next) {
   // DO YOUR MAGIC
+  console.log (`\n The request method is ${req.method}, \n The request URL is ${req.url}, \n The timestamp is ${Date.now()}`) 
+  next()
 }
 
 function validateUserId(req, res, next) {
+  const {id} = req.params
+  usersModel.getById(id)
+  .then(result => {
+    if(result) {
+      req.user = result;
+      next();
+    }else{
+      res.status(404).json({message: "ID not found"})
+      return
+    }
+  })
   // DO YOUR MAGIC
 }
 
@@ -15,3 +30,5 @@ function validatePost(req, res, next) {
 }
 
 // do not forget to expose these functions to other modules
+
+module.exports = {logger, validateUserId, validateUser, validatePost}
